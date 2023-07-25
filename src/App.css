@@ -1,33 +1,48 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
 .countryImg img{
   height: 10em;
   width: 100%;
+  /* border: 5px solid red; */
+
 }
 
 .countryCard{
-  width: 12em;
+  width: 18em;
+  height: 20em;
   display: flex;
   flex-direction: column;
-  background-color: rgb(171, 177, 183);
+  background-color: rgb(255, 255, 255);
+  border: 2px solid black;
 }
 
 
-.container{
-  width: 100%;
+.innerContainer{
   display: flex;
   flex-wrap: wrap;
-  gap: 5em;
-  justify-content: center;
-  border: 3px solid white;
-  padding: 2em;
+  gap: 1em;
+  justify-content: space-between; 
+  padding: 2em 4rem 2rem 4rem;   
 }
 
-h3{
-  color: white;
+h4{
+  color: black;
 }
 
 
 .countryDetails{
   text-align: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 1em;
+
 }
 
 
@@ -41,16 +56,12 @@ h3{
 .search{
   display: flex;
   justify-content: space-around;
-  /* padding-top: 2em;
-   */
-
    margin: 1em;
 }
 
-body{
-  padding: 0;
-  margin: 0;
 
+
+.main-container{
   display: flex;
-  justify-content: center;
+  flex-direction: column; 
 }
