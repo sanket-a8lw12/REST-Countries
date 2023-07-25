@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-export const Header = () => {
+export const Header = ({toggleStyle, myStyle} ) => {
   return (
     <>
-    <div className='header'>
+    <div className='header' style={myStyle}>
         <h2>Where in the world?</h2>
-        <button>Dark Mode</button>
+        <button onClick={toggleStyle}>Dark Mode</button>
     </div>
     </>
   )
