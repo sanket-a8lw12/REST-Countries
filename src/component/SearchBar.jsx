@@ -1,4 +1,10 @@
-export const SearchBar = ({ setRegion, searchResult, setSearchResult, subRegion, setSubRegion, setSortChange }) => {
+import { useContext } from "react"
+import {ThemeContext} from './../App';
+
+export const SearchBar = ({ setRegion, searchResult, setSearchResult, subRegionList,
+    setSubRegion, setSortChange }) => {
+
+        const [darkTheme, setDarkTheme] = useContext(ThemeContext);
 
     const handleSearchResult = (event) => {
         setSearchResult(event.target.value)
@@ -6,19 +12,25 @@ export const SearchBar = ({ setRegion, searchResult, setSearchResult, subRegion,
 
     const handleRegionChange = (event) => {
         setRegion(event.target.value);
+        setSubRegion('');
     }
 
     const handleSortChange = (event) => {
         setSortChange(event.target.value);
     }
 
+    const handleSubRegionChange = (event) => {
+        setSubRegion(event.target.value);
+    }
+
+
     return (
-        <div className='search' >
+        <div className= {darkTheme &&  'search darkMode' || 'search'}>
             <input onChange={handleSearchResult} className="searchBarWidth" type="search" placeholder="Search" aria-label="Search"
                 value={searchResult} />
 
             <div className="dropdownOption">
-                <select id='dropdown' onChange={handleSortChange}>
+                <select id='dropdown' onChange={handleSortChange} className="searchBarWidth">
                     <option value="">Sort</option>
                     <option value="Ascending-population">Ascending population</option>
                     <option value="Descending-population">Descending population</option>
@@ -29,26 +41,26 @@ export const SearchBar = ({ setRegion, searchResult, setSearchResult, subRegion,
 
 
             <div className="dropdownOption">
-                <select id='dropdown' onChange={handleRegionChange}>
+                <select id='dropdown' onChange={handleRegionChange} className="searchBarWidth">
                     <option value="">Select Region</option>
                     <option value="Oceania">Oceania</option>
                     <option value="Americas">Americas</option>
                     <option value="Asia">Asia</option>
                     <option value="Europe">Europe</option>
                     <option value="Africa">Africa</option>
-                    <option value="Antarctic">Antarctic</option>
+                    <option value="Antartica">Antartica</option>
                 </select>
             </div>
 
 
 
             <div className="dropdownOption">
-                <select>
+                <select onChange={handleSubRegionChange} className="searchBarWidth">
                     <option value="">Select Subregion</option>
-                    {subRegion.map((item) => {
+                    {subRegionList.map((item) => {
                         // console.log(item)
                         // console.log("----------")
-                        return <option value="{item}">{item}</option>
+                        return <option key={item} value={item}>{item}</option>
                     })}
                 </select>
             </div>

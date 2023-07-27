@@ -1,13 +1,17 @@
 import { CountryCard } from './CountryCard'
+import { useContext } from "react"
+import {ThemeContext} from './../App';
 
-export const Countries = ({ countries, myStyle }) => {
+export const Countries = ({ countries, myStyle, error }) => {
+    const [darkTheme, setDarkTheme] = useContext(ThemeContext);
+        
 
     return (
-        <div className='innerContainer' style={myStyle}>
-            {countries.length === 0 ? <h1>Sorry no countries found...</h1> :
+        <div className= {darkTheme &&  'innerContainer darkMode' || 'innerContainer'} >
+            {countries.length === 0 ? <h2>Sorry no countries found...</h2> :
                 (countries.map((country) => {
                     return < CountryCard countryFlag={country.flags.png} countryName={country.name.common} population={country.population}
-                        region={country.region} capital={country.capital} key={country.name.common} />
+                        region={country.region} capital={country.capital} key={country.name.common}  />
                 }))}
 
         </div>

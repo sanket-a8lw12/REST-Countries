@@ -1,37 +1,57 @@
 import './App.css'
+import React from 'react';
 import { useState, useEffect } from 'react'
 
 import { Countries } from "./component/Countries"
 import { Header } from './component/Header';
 import { SearchBar } from './component/SearchBar';
 
+
+export const ThemeContext = React.createContext();
+
+
+
 function App() {
 
+
+
+  const [darkTheme, setDarkTheme] = useState(true);
   const [countries, setCountries] = useState([]);
   const [region, setRegion] = useState('');
   const [searchResult, setSearchResult] = useState('');
   const [subRegion, setSubRegion] = useState('');
   const [sortChange, setSortChange] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState('');
 
   const [myStyle, setMyStyle] = useState({
-    color: "black",
-    backgroundColor: 'white'
+    // color: "black",
+    // backgroundColor: 'white'
   })
 
+
+
+
+
   const toggleStyle = () => {
-    if (myStyle.color === "white") {
-      setMyStyle({
-        color: "black",
-        backgroundColor: 'white'
-      })
+    if(darkTheme){
+      setDarkTheme(false);
     }
-    else {
-      setMyStyle({
-        color: "white",
-        backgroundColor: "rgb(67, 68, 68)"
-      })
+    else{
+      setDarkTheme(true);
     }
+    // if (myStyle.color === "white") {
+    //   setMyStyle({
+    //     // color: "black",
+    //     // backgroundColor: 'white'
+    //   })
+    // }
+    // else {
+    //   setMyStyle({
+    //     // color: "white",
+    //     // backgroundColor: "rgb(67, 68, 68)"
+    //   })
+    // }
   }
 
   useEffect(() => {
@@ -41,6 +61,9 @@ function App() {
       }).then((countryData) => {
         setCountries(countryData);
         setIsLoaded(true);
+      }).catch(error => {
+        console.error(error);
+        setError(error.message);
       })
   }, [])
 
@@ -53,22 +76,16 @@ function App() {
 
 
 
-  //code for subRegion
+  // code for subRegion
   let subRegionList = [];
+
   if (region !== '') {
-    subRegionList = filteredRegion.reduce((acc, curr) => {
-      let subRegion = curr.subregion
-
-      if (subRegion in acc) {
-        acc[subRegion].push(curr);
-      }
-      else {
-        acc[subRegion] = [curr];
-      }
-
-      return acc;
-    }, {});
+    subRegionList = [...filteredRegion.reduce((acc, curr) => {
+      return acc.add(curr.subregion)
+    }, new Set())]
   }
+
+
 
 
   // function for subregion
@@ -78,66 +95,77 @@ function App() {
 
 
 
-  let search = subRegionCountries.filter((country) => {
+
+  let displayCountries = subRegionCountries.filter((country) => {
     return country.name.common.toLowerCase().includes(searchResult.toLowerCase());
   })
 
 
+  function sortAll(content, contentType, sortType) {
+    if (sortType === 'Ascending') {
+      return content.sort((countryOne, countryTwo) => {
+        return countryOne[contentType] - countryTwo[contentType];
+      })
+    }
+    else if (sortType === 'Descending') {
+      return content.sort((countryOne, countryTwo) => {
+        return countryTwo[contentType] - countryOne[contentType];
+      })
+    }
+  }
 
+
+  function sortFunction(data, condition) {
+    const sortType = condition.split('-')[0];
+    const contentType = condition.split('-')[1]; //value="Ascending-population"
+    sortAll(data, contentType, sortType);
+  }
 
   // code for sorting the data
 
-  if (sortChange === "Ascending-population") {
-    search.sort((countryOne, countryTwo) => {
-      return countryOne.population - countryTwo.population;
-    })
-  }
+  if (sortChange !== '') {
+    sortFunction(displayCountries, sortChange);
 
-  if (sortChange === "Descending-population") {
-    search.sort((countryOne, countryTwo) => {
-      return countryTwo.population - countryOne.population;
-    })
-  }
-
-  if (sortChange === "Ascending-area") {
-    search.sort((countryOne, countryTwo) => {
-      return countryOne.area - countryTwo.area;
-    })
-  }
-
-  if (sortChange === "Descending-area") {
-    search.sort((countryOne, countryTwo) => {
-      return countryTwo.area - countryOne.area;
-    })
   }
 
 
 
-return(
-  <>
-    {!isLoaded ? <h1>Loading...</h1> : 
 
-     (
-    <div className='main-container' style={myStyle}>
-      <Header toggleStyle={toggleStyle} myStyle={myStyle} />
+  if (error !== '') {
+    return <h2>{error}</h2>
+  }
 
-      < SearchBar
-        setRegion={setRegion}
-        searchResult={searchResult}
-        setSearchResult={setSearchResult}
-        subRegion={Object.keys(subRegionList)}
-        setSubRegion={setSubRegion}
-        setSortChange={setSortChange}
-        countries={countries}
-        filteredRegion={filteredRegion}
-        toggleStyle={toggleStyle} myStyle={myStyle} />
+  return (
+    <>
 
-      <Countries countries={search} myStyle={myStyle} />
-    </div>
-      )}
-      </>
-)
+      {!isLoaded ? <h2 id='Loading'>Loading the data...</h2> :
 
+        (
+          <ThemeContext.Provider value={[darkTheme, setDarkTheme]}>
+
+            <div className= {darkTheme &&  'main-container darkMode' || 'main-container'}>
+              <Header toggleStyle={toggleStyle} myStyle={myStyle} />
+
+              < SearchBar
+                setRegion={setRegion}
+                searchResult={searchResult}
+                setSearchResult={setSearchResult}
+                subRegionList={subRegionList}
+                setSubRegion={setSubRegion}
+                setSortChange={setSortChange}
+                countries={countries}
+                filteredRegion={filteredRegion}
+                toggleStyle={toggleStyle} myStyle={myStyle} />
+
+              <Countries countries={displayCountries} error={error} myStyle={myStyle} />
+
+            </div>
+          </ThemeContext.Provider>
+        )}
+
+
+    </>
+  )
 }
 
 export default App;
