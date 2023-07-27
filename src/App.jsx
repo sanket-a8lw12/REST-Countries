@@ -10,8 +10,9 @@ function App() {
   const [countries, setCountries] = useState([]);
   const [region, setRegion] = useState('');
   const [searchResult, setSearchResult] = useState('');
-  const [subRegion, setSubRegion] = useState([]);
+  const [subRegion, setSubRegion] = useState('');
   const [sortChange, setSortChange] = useState("");
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const [myStyle, setMyStyle] = useState({
     color: "black",
@@ -28,101 +29,115 @@ function App() {
     else {
       setMyStyle({
         color: "white",
-        backgroundColor: 'black'
+        backgroundColor: "rgb(67, 68, 68)"
       })
     }
   }
 
-  // const fetchData = async () => {
-    
-  // }
- 
   useEffect(() => {
     fetch("https://restcountries.com/v3.1/all")
       .then((response) => {
         return response.json();
-      }).then((data) => {
-        setCountries(data);
+      }).then((countryData) => {
+        setCountries(countryData);
+        setIsLoaded(true);
       })
   }, [])
-  
+
 
 
   let filteredRegion = countries.filter((country) => {
     return country.region.toLowerCase().includes(region.toLowerCase());
   })
 
-    //code for subRegion
-  
-    let subRegionList = filteredRegion.reduce((acc, curr)=>{
-      let subRegion =  curr.subregion
-       
-        if(subRegion in acc){
-          acc[subRegion].push(curr);
-        }
-        else{
-          acc[subRegion] = [curr];
-        }
 
-        return acc;
+
+
+  //code for subRegion
+  let subRegionList = [];
+  if (region !== '') {
+    subRegionList = filteredRegion.reduce((acc, curr) => {
+      let subRegion = curr.subregion
+
+      if (subRegion in acc) {
+        acc[subRegion].push(curr);
+      }
+      else {
+        acc[subRegion] = [curr];
+      }
+
+      return acc;
     }, {});
-
-    // poly: [india, america
-
-  
-  // console.log(subRegionList);
-    useEffect(() =>{
-      setSubRegion(Object.keys(subRegionList));
-    }, [region]);
+  }
 
 
+  // function for subregion
+  const subRegionCountries = filteredRegion.filter((item) => {
+    return item.subregion?.toLowerCase().includes(subRegion.toLowerCase());
+  })
 
-  let search = filteredRegion.filter((country) => {
+
+
+  let search = subRegionCountries.filter((country) => {
     return country.name.common.toLowerCase().includes(searchResult.toLowerCase());
   })
-  
+
+
+
+
   // code for sorting the data
 
-  if(sortChange === "Ascending-population"){
-    search.sort((countryOne, countryTwo)=>{
-      return countryOne.population - countryTwo.population;    
+  if (sortChange === "Ascending-population") {
+    search.sort((countryOne, countryTwo) => {
+      return countryOne.population - countryTwo.population;
     })
   }
 
-  if(sortChange === "Descending-population"){
-    search.sort((countryOne, countryTwo)=>{
-      return countryTwo.population - countryOne.population;    
+  if (sortChange === "Descending-population") {
+    search.sort((countryOne, countryTwo) => {
+      return countryTwo.population - countryOne.population;
     })
   }
 
-  if(sortChange === "Ascending-area"){
-    search.sort((countryOne, countryTwo)=>{
-      return countryOne.area - countryTwo.area;    
+  if (sortChange === "Ascending-area") {
+    search.sort((countryOne, countryTwo) => {
+      return countryOne.area - countryTwo.area;
     })
   }
 
-  if(sortChange === "Descending-area"){
-    search.sort((countryOne, countryTwo)=>{
-      return countryTwo.area - countryOne.area;    
+  if (sortChange === "Descending-area") {
+    search.sort((countryOne, countryTwo) => {
+      return countryTwo.area - countryOne.area;
     })
   }
 
 
 
-  return (
-    <div className='main-container'>
+return(
+  <>
+    {!isLoaded ? <h1>Loading...</h1> : 
+
+     (
+    <div className='main-container' style={myStyle}>
       <Header toggleStyle={toggleStyle} myStyle={myStyle} />
-      
-      < SearchBar 
-      setRegion={setRegion} 
-      searchResult={searchResult} 
-      setSearchResult={setSearchResult}
-      subRegion={subRegion} 
-      setSubRegion={setSubRegion} 
-      setSortChange={setSortChange}/>
+
+      < SearchBar
+        setRegion={setRegion}
+        searchResult={searchResult}
+        setSearchResult={setSearchResult}
+        subRegion={Object.keys(subRegionList)}
+        setSubRegion={setSubRegion}
+        setSortChange={setSortChange}
+        countries={countries}
+        filteredRegion={filteredRegion}
+        toggleStyle={toggleStyle} myStyle={myStyle} />
+
       <Countries countries={search} myStyle={myStyle} />
     </div>
-  )
+      )}
+      </>
+)
+
 }
 
 export default App;
