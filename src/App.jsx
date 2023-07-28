@@ -15,7 +15,7 @@ function App() {
 
 
 
-  const [darkTheme, setDarkTheme] = useState(true);
+  const [darkTheme, setDarkTheme] = useState(false);
   const [countries, setCountries] = useState([]);
   const [region, setRegion] = useState('');
   const [searchResult, setSearchResult] = useState('');
@@ -34,24 +34,13 @@ function App() {
 
 
   const toggleStyle = () => {
-    if(darkTheme){
+    if (darkTheme) {
       setDarkTheme(false);
     }
-    else{
+    else {
       setDarkTheme(true);
     }
-    // if (myStyle.color === "white") {
-    //   setMyStyle({
-    //     // color: "black",
-    //     // backgroundColor: 'white'
-    //   })
-    // }
-    // else {
-    //   setMyStyle({
-    //     // color: "white",
-    //     // backgroundColor: "rgb(67, 68, 68)"
-    //   })
-    // }
+  
   }
 
   useEffect(() => {
@@ -73,6 +62,12 @@ function App() {
     return country.region.toLowerCase().includes(region.toLowerCase());
   })
 
+
+  let regionList = [...countries.reduce((acc, curr) => {
+    return acc.add(curr.region)
+  }, new Set())]
+
+  console.log(regionList);
 
 
 
@@ -129,8 +124,6 @@ function App() {
   }
 
 
-
-
   if (error !== '') {
     return <h2>{error}</h2>
   }
@@ -143,7 +136,7 @@ function App() {
         (
           <ThemeContext.Provider value={[darkTheme, setDarkTheme]}>
 
-            <div className= {darkTheme &&  'main-container darkMode' || 'main-container'}>
+            <div className={darkTheme && 'main-container darkMode' || 'main-container'}>
               <Header toggleStyle={toggleStyle} myStyle={myStyle} />
 
               < SearchBar
@@ -155,6 +148,7 @@ function App() {
                 setSortChange={setSortChange}
                 countries={countries}
                 filteredRegion={filteredRegion}
+                regionList = {regionList}
                 toggleStyle={toggleStyle} myStyle={myStyle} />
 
               <Countries countries={displayCountries} error={error} myStyle={myStyle} />
