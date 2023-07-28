@@ -5,15 +5,16 @@ import { useState, useEffect } from 'react'
 import { Countries } from "./component/Countries"
 import { Header } from './component/Header';
 import { SearchBar } from './component/SearchBar';
+import {
+  Route,
+  Routes
+} from "react-router-dom";
+import CountryDetailsPage from './component/CountryDetailsPage';
 
 
 export const ThemeContext = React.createContext();
 
-
-
 function App() {
-
-
 
   const [darkTheme, setDarkTheme] = useState(false);
   const [countries, setCountries] = useState([]);
@@ -24,10 +25,10 @@ function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState('');
 
-  const [myStyle, setMyStyle] = useState({
-    // color: "black",
-    // backgroundColor: 'white'
-  })
+  // const [myStyle, setMyStyle] = useState({
+  //   // color: "black",
+  //   // backgroundColor: 'white'
+  // })
 
 
 
@@ -40,7 +41,7 @@ function App() {
     else {
       setDarkTheme(true);
     }
-  
+
   }
 
   useEffect(() => {
@@ -130,36 +131,50 @@ function App() {
 
   return (
     <>
+    {!isLoaded ?
+         <h2 id='Loading'>Loading the data...</h2> :
+         <div>
+          <Routes>
+            <Route path='/' element ={
+              <>
+              <ThemeContext.Provider value={[darkTheme, setDarkTheme]}>
+              <div className={darkTheme && 'main-container darkMode' || 'main-container'}>
+                <Header toggleStyle={toggleStyle}  />
 
-      {!isLoaded ? <h2 id='Loading'>Loading the data...</h2> :
+                < SearchBar
+                  setRegion={setRegion}
+                  searchResult={searchResult}
+                  setSearchResult={setSearchResult}
+                  subRegionList={subRegionList}
+                  setSubRegion={setSubRegion}
+                  setSortChange={setSortChange}
+                  countries={countries}
+                  filteredRegion={filteredRegion}
+                  regionList={regionList}
+                  toggleStyle={toggleStyle} />
 
-        (
-          <ThemeContext.Provider value={[darkTheme, setDarkTheme]}>
+                <Countries countries={displayCountries} error={error} />
+                </div>
+              </ThemeContext.Provider>
+              </>
+            } ></Route>
+          
+          <Route path='/Country/:id' element={
+            <>
+              <ThemeContext.Provider value={[darkTheme, setDarkTheme]}>
+              <Header toggleStyle={toggleStyle} />
+              <CountryDetailsPage countries={countries}/>
+              </ThemeContext.Provider>
+            </>
+          } >
 
-            <div className={darkTheme && 'main-container darkMode' || 'main-container'}>
-              <Header toggleStyle={toggleStyle} myStyle={myStyle} />
+          </Route>
+          </Routes>
 
-              < SearchBar
-                setRegion={setRegion}
-                searchResult={searchResult}
-                setSearchResult={setSearchResult}
-                subRegionList={subRegionList}
-                setSubRegion={setSubRegion}
-                setSortChange={setSortChange}
-                countries={countries}
-                filteredRegion={filteredRegion}
-                regionList = {regionList}
-                toggleStyle={toggleStyle} myStyle={myStyle} />
-
-              <Countries countries={displayCountries} error={error} myStyle={myStyle} />
-
-            </div>
-          </ThemeContext.Provider>
-        )}
-
-
-    </>
+         </div>
+    }</>
   )
+  
 }
 
 export default App;
