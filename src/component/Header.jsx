@@ -5,8 +5,8 @@ import {ThemeContext} from './../App';
 
 export const Header = ({ toggleStyle}) => {
   const [darkTheme, setDarkTheme] = useContext(ThemeContext);
-  console.log("=========")
-  console.log(darkTheme &&  'header darkMode' || 'header')
+  // console.log("=========")
+  // console.log(darkTheme &&  'header darkMode' || 'header')
   return (
     <>
       <div className= {darkTheme &&  'header darkMode' || 'header' }>

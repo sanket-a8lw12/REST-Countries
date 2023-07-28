@@ -7,7 +7,7 @@ export default function CountryDetailsPage({countries}) {
     const {id} = useParams()
 
     const currentCountry = countries.find(country => country.cca3 === id);
-    console.log("-+-=-=-=-=-")
+    // console.log("-+-=-=-=-=-")
     // console.log(Object.values(currentCountry.name.nativeName)[0].official);
 
   return (
