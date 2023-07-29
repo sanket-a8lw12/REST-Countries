@@ -11,7 +11,7 @@ export const Header = ({ toggleStyle}) => {
     <>
       <div className= {darkTheme &&  'header darkMode' || 'header' }>
         <h1>Where in the world?</h1>
-        <button className='btn btn-warning' onClick={toggleStyle}>Dark Mode</button>
+        <button className='btn' onClick={toggleStyle}>Dark Mode</button>
       </div>
     </>
   )
