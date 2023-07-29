@@ -103,3 +103,11 @@ h2{
   color: green;
 }
 /*  */
+
+.btn{
+  height: 2em;
+    width: 6em;
+    border-radius: 0.5em;
+    color: black;
+
+}

@@ -7,8 +7,10 @@
     padding: 2em;
     flex-wrap: wrap;
     height: 89vh;
+    padding-top: 0;
     /* color: aliceblue; */
     /* background-color: black; */
+    /* border: 2px solid red; */
 }
 
 .CountryInfo{
@@ -28,4 +30,31 @@ img{
 }
 body{
     /* background-color: black; */
+}
+
+.border{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.border-btn{
+    color: black;
+    height: 2em;
+    width: 4em;
+    border-radius: 0.5em;
+
+}
+.back-btn button{ 
+    /* border: 2px solid black; */
+    color: black;
+    height: 2em;
+    width: 6em;
+    border-radius: 0.5em;
+}
+
+.CountryInfoText{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
 }
