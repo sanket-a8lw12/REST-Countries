@@ -1,7 +1,6 @@
 import './App.css'
 import React from 'react';
 import { useState, useEffect } from 'react'
-
 import { Countries } from "./component/Countries"
 import { Header } from './component/Header';
 import { SearchBar } from './component/SearchBar';
@@ -24,15 +23,6 @@ function App() {
   const [sortChange, setSortChange] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState('');
-
-  // const [myStyle, setMyStyle] = useState({
-  //   // color: "black",
-  //   // backgroundColor: 'white'
-  // })
-
-
-
-
 
   const toggleStyle = () => {
     if (darkTheme) {
@@ -131,50 +121,50 @@ function App() {
 
   return (
     <>
-    {!isLoaded ?
-         <h2 id='Loading'>Loading the data...</h2> :
-         <div>
+      {!isLoaded ?
+        <h2 id='Loading'>Loading the data...</h2> :
+        <div>
           <Routes>
-            <Route path='/' element ={
+            <Route path='/' element={
               <>
-              <ThemeContext.Provider value={[darkTheme, setDarkTheme]}>
-              <div className={darkTheme && 'main-container darkMode' || 'main-container'}>
-                <Header toggleStyle={toggleStyle}  />
+                <ThemeContext.Provider value={[darkTheme, setDarkTheme]}>
+                  <div className={darkTheme && 'main-container darkMode' || 'main-container'}>
+                    <Header toggleStyle={toggleStyle} />
 
-                < SearchBar
-                  setRegion={setRegion}
-                  searchResult={searchResult}
-                  setSearchResult={setSearchResult}
-                  subRegionList={subRegionList}
-                  setSubRegion={setSubRegion}
-                  setSortChange={setSortChange}
-                  countries={countries}
-                  filteredRegion={filteredRegion}
-                  regionList={regionList}
-                  toggleStyle={toggleStyle} />
+                    < SearchBar
+                      setRegion={setRegion}
+                      searchResult={searchResult}
+                      setSearchResult={setSearchResult}
+                      subRegionList={subRegionList}
+                      setSubRegion={setSubRegion}
+                      setSortChange={setSortChange}
+                      countries={countries}
+                      filteredRegion={filteredRegion}
+                      regionList={regionList}
+                      toggleStyle={toggleStyle} />
 
-                <Countries countries={displayCountries} error={error} />
-                </div>
-              </ThemeContext.Provider>
+                    <Countries countries={displayCountries} error={error} />
+                  </div>
+                </ThemeContext.Provider>
               </>
             } ></Route>
-          
-          <Route path='/Country/:id' element={
-            <>
-              <ThemeContext.Provider value={[darkTheme, setDarkTheme]}>
-              <Header toggleStyle={toggleStyle} />
-              <CountryDetailsPage countries={countries}/>
-              </ThemeContext.Provider>
-            </>
-          } >
 
-          </Route>
+            <Route path='/Country/:id' element={
+              <>
+                <ThemeContext.Provider value={[darkTheme, setDarkTheme]}>
+                  <Header toggleStyle={toggleStyle} />
+                  <CountryDetailsPage countries={countries} />
+                </ThemeContext.Provider>
+              </>
+            } >
+
+            </Route>
           </Routes>
 
-         </div>
-    }</>
+        </div>
+      }</>
   )
-  
+
 }
 
 export default App;
